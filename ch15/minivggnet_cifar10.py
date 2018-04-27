@@ -37,6 +37,9 @@ model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy
 print('[INFO] training network...')
 H = model.fit(trainX, trainY, validation_data=(testX, testY), batch_size=64, epochs=40, verbose=2)
 
+print('[INFO] serializing network...')
+model.save(args['model'])
+
 print('[INFO] evaluating network...')
 predictions = model.predict(testX, batch_size=64)
 print(classification_report(testY.argmax(axis=1), predictions.argmax(axis=1), target_names=labelNames))
