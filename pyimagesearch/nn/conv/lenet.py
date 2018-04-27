@@ -37,5 +37,5 @@ class LeNet(object):
         model.add(Dense(units=classes))
         model.add(Activation('softmax'))
 
-        # return the constructred model
+        # return the constructed model
         return model
