@@ -1,0 +1,2 @@
+# Checkpointing Service in Keras
+## Serialize the network to disk each time there is an improvement during training
