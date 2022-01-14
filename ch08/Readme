@@ -15,5 +15,5 @@ Parameterization: a process of defining the necessary parameters of a given mode
     Quantifies how well the predicted labels agree with our ground-truth labels. Lower loss function values means
     higher classification accuracy, at least on the training set.
 4) Weights and biases
-    Weight matrix (denoted as W) and bias vector (denoted as b) are called the weights or parameters of our classifier
+    Weight matrix (denoted as **W**) and bias vector (denoted as **b**) are called the weights or parameters of our classifier
     that we'll actually be optimizing.
