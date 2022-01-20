@@ -4,43 +4,29 @@ import argparse
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from sklearn.datasets import make_blobs
-import matplotlib.pylab as plt
+import matplotlib.pyplot as plt
 
 
-def sigmoidActivation(x):
-    """
-    Compute the sigmoid activation value for a given input.
-    :param x: The given input.
-    :return:
-    """
-
+def sigmoid_activation(x):
+    # compute the sigmoid activation value for a given input.
     return 1.0 / (1 + np.exp(-x))
 
 
-def sigmoidDeriv(x):
-    """
-    Compute the derivative of the sigmoid function ASSUMING that the input 'x' has already been passed through the
-    sigmoid activation function.
-    :param x: The input that has already been passed through the sigmoid activation function.
-    :return:
-    """
-
+def sigmoid_deriv(x):
+    # compute the derivative of the sigmoid function ASSUMING that \
+    # the input 'x' has already been passed through the sigmoid activation function.
     return x * (1 - x)
 
 
 def predict(X, W):
-    """
-    A simple prediction function that applies sigmoid activation function and thresholds it based on whether the neuron
-    is firing(1) or not (0).
-    :param X: The input data points X.
-    :param W: The weights matrix.
-    :return: The predicted labels.
-    """
+    # take the dot product between our features and weight matrix
+    preds = sigmoid_activation(X.dot(W))
 
-    preds = sigmoidActivation(X.dot(W))
+    # apply a step function to threshold the outputs to binary class labels.
     preds[preds <= 0.5] = 0
     preds[preds > 0.5] = 1
 
+    # return the predictions
     return preds
 
 
@@ -53,9 +39,12 @@ args = vars(ap.parse_args())
 (X, y) = make_blobs(n_samples=1000, n_features=2, centers=2, cluster_std=1.5, random_state=1)
 y = y.reshape((y.shape[0], 1))
 
-# add bias terms
+# insert a column of 1's as the last entry in the feature matrix -- this little trick allows us to treat the \
+# bias vector as a trainable parameter within the weight matrix
 X = np.concatenate((X, np.ones((X.shape[0], 1))), axis=1)
 
+# partition the date into training and testing splits using 50% of the data for training and the remaining 50% \
+# for testing
 (trainX, testX, trainY, testY) = train_test_split(X, y, test_size=0.5, random_state=42)
 
 # initialize weight matrix and list of losses
@@ -65,23 +54,23 @@ losses = []
 
 # loop over the desired number of epochs
 for epoch in np.arange(0, args['epochs']):
-    # take the dot product between our features 'X' and the weight matrix 'W', then pass this value through our sigmoid
-    # activation function, thereby giving us our predictions on the dataset
-    preds = sigmoidActivation(trainX.dot(W))
+    # take the dot product between our features 'X' and the weight matrix 'W', then pass this value through our \
+    # sigmoid activation function, thereby giving us our predictions on the dataset
+    preds = sigmoid_activation(trainX.dot(W))
 
-    # now that we have our predictions, we need to determine the 'error', which is the difference between our
-    # predictions and the true values
+    # now that we have our predictions, we need to determine the 'error', which is the difference between \
+    # our predictions and the true values
     error = preds - trainY
     loss = np.sum(error ** 2)
     losses.append(loss)
 
-    # the gradient descent update is the dot product between our 1) features and 2) the error of the sigmoid derivative
-    # of our predictions
-    d = error * sigmoidDeriv(preds)
+    # the gradient descent update is the dot product between our 1) features and 2) the error of the sigmoid \
+    # derivative of our predictions
+    d = error * sigmoid_deriv(preds)
     gradient = trainX.T.dot(d)
 
-    # in the update stage, all we need to do is 'nudge' the weight matrix in the negative direction of the gradient
-    # (hence the term 'gradient descent' by taking a small step towards a set of 'more optimal' parameters
+    # in the update stage, all we need to do is 'nudge' the weight matrix in the negative direction of the \
+    # gradient (hence the term "gradient descent" by taking a small step towards a set of "more optimal" parameters
     W += -args['alpha'] * gradient
 
     # check to see if an update should be displayed
