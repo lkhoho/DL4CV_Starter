@@ -1,8 +1,9 @@
+from xmlrpc.client import boolean
 import numpy as np
 
 
 class Perceptron(object):
-    def __init__(self, N, alpha=0.1):
+    def __init__(self, N: int, alpha: float = 0.1):
         """
         Constructs a instance of Perceptron instance.
         :param N: The number of columns in input feature vector.
@@ -14,37 +15,43 @@ class Perceptron(object):
         self.alpha = alpha
 
     def step(self, x):
-        """
-        Serves as activation function.
-        :param x:
-        :return:
-        """
-
+        # apply the step function (for activation)
         return 1 if x > 0 else 0
 
-    def fit(self, X, y, epochs=10):
-        """
-        Fit a model to the data.
-        :param X: The actual training data.
-        :param y: The target output class labels.
-        :param epochs: The number of epochs the Perceptron will train for.
-        :return:
-        """
-
+    def fit(self, X, y, epochs: int = 10):
+        # insert a column of 1's as the last entry in the feature \
+        # matrix -- this little trick allows us to treat the bias as \
+        # a trainable parameter within the weight matrix
         X = np.column_stack((X, np.ones((X.shape[0]))))
 
+        # loop over the desired number of epochs
         for epoch in np.arange(0, epochs):
+            # loop over each individual data point
             for (x, target) in zip(X, y):
+                # take the dot product between the input features and \
+                # the weight matrix, then pass this value through the \
+                # step function to obtain the prediction
                 p = self.step(np.dot(x, self.W))
 
+                # only perform a weight update if our prediction does not \
+                # match the target
                 if p != target:
+                    # determine the error
                     error = p - target
+                    
+                    # update the weight matrix
                     self.W += -self.alpha * error * x
 
-    def predict(self, X, addBias=True):
+    def predict(self, X, addBias: bool = True):
+        # ensure our input is a matrix
         X = np.atleast_2d(X)
 
+        # check to see if the bias column should be added
         if addBias:
+            # insert a column of 1's as the last entry in the feature \
+            # matrix (bias)
             X = np.column_stack((X, np.ones((X.shape[0]))))
 
+        # take the dot product between the input features and the weight \
+        # matrix, then pass the value through the step function
         return self.step(np.dot(X, self.W))
