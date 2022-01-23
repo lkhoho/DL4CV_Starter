@@ -1,25 +1,28 @@
 import numpy as np
 import argparse
+import matplotlib.pyplot as plt
 from sklearn import datasets
 from sklearn.preprocessing import LabelBinarizer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
-from keras.models import Sequential
-from keras.layers.core import Dense
-from keras.optimizers import SGD
-import matplotlib.pylab as plt
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.optimizers import SGD
 
 
 ap = argparse.ArgumentParser()
-ap.add_argument('-o', '--output', required=True, help='path to the output loss/accuracy plot')
+ap.add_argument('-o', '--output', required=True, 
+                help='path to the output loss/accuracy plot')
 args = vars(ap.parse_args())
 
-# grab the MNIST dataset (if this is your first time running this script, the download may take a minute -- the 55MB
-# MNIST dataset will be downloaded
+# grab the MNIST dataset (if this is your first time running this \
+# script, the download may take a minute -- the 55MB MNIST dataset \
+# will be downloaded
 print('[INFO] loading MNIST (full) dataset...')
-dataset = datasets.fetch_mldata('MNIST Original')
+dataset = datasets.fetch_openml('mnist_784')
 
-# scale the raw pixel intensities to the range [0.0, 1.0], then construct the training and testing splits
+# scale the raw pixel intensities to the range [0.0, 1.0], then \
+# construct the training and testing splits
 data = dataset.data.astype('float') / 255.0
 (trainX, testX, trainY, testY) = train_test_split(data, dataset.target, test_size=0.25)
 
@@ -36,7 +39,7 @@ model.add(Dense(10, activation='softmax'))
 
 # train the model using SGD
 print('[INFO] training network...')
-sgd = SGD(lr=0.01)
+sgd = SGD(learning_rate=0.01)
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 H = model.fit(trainX, trainY, validation_data=(testX, testY), epochs=100, batch_size=128)
 
@@ -51,8 +54,8 @@ plt.style.use('ggplot')
 plt.figure()
 plt.plot(np.arange(0, 100), H.history['loss'], label='train_loss')
 plt.plot(np.arange(0, 100), H.history['val_loss'], label='validation_loss')
-plt.plot(np.arange(0, 100), H.history['acc'], label='train_accuracy')
-plt.plot(np.arange(0, 100), H.history['val_acc'], label='validation_accuracy')
+plt.plot(np.arange(0, 100), H.history['accuracy'], label='train_accuracy')
+plt.plot(np.arange(0, 100), H.history['val_accuracy'], label='validation_accuracy')
 plt.title('Training Loss and Accuracy')
 plt.xlabel('Epoch #')
 plt.ylabel('Loss or Accuracy')
