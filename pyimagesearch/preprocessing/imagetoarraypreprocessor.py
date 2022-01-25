@@ -1,4 +1,4 @@
-from keras.preprocessing.image import img_to_array
+from tensorflow.keras.preprocessing.image import img_to_array
 
 
 class ImageToArrayPreprocessor(object):
@@ -7,10 +7,12 @@ class ImageToArrayPreprocessor(object):
     rearranges the dimension of the image
     """
 
-    def __init__(self, dataFormat=None):
+    def __init__(self, dataFormat: str = None):
         """
-        :param dataFormat: Defaults to None to use setting in keras.json.
-        Optionally, 'channels_first' or 'channels_last' can be passed.
+        :param dataFormat: Defaults to None to use setting in \
+                           ~/.keras/keras.json. Optionally, \
+                           'channels_first' or 'channels_last' \
+                           string can be passed.
         """
         self.dataFormat = dataFormat
 

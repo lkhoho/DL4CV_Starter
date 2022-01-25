@@ -1,8 +1,8 @@
 from sklearn.preprocessing import LabelBinarizer
 from sklearn.metrics import classification_report
-from keras.optimizers import SGD
-from keras.datasets import cifar10
-import matplotlib.pylab as plt
+from tensorflow.keras.optimizers import SGD
+from tensorflow.keras.datasets import cifar10
+import matplotlib.pyplot as plt
 import numpy as np
 
 from pyimagesearch.nn.conv.shallownet import ShallowNet
@@ -24,7 +24,7 @@ labelNames = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'h
 
 # initialize the optimizer and model
 print('[INFO] compiling model...')
-opt = SGD(lr=0.01)
+opt = SGD(learning_rate=0.01)
 model = ShallowNet.build(width=32, height=32, depth=3, classes=10)
 model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
 
@@ -42,8 +42,8 @@ plt.style.use('ggplot')
 plt.figure()
 plt.plot(np.arange(0, 40), H.history['loss'], label='train_loss')
 plt.plot(np.arange(0, 40), H.history['val_loss'], label='validation_loss')
-plt.plot(np.arange(0, 40), H.history['acc'], label='train_acc')
-plt.plot(np.arange(0, 40), H.history['val_acc'], label='validation_acc')
+plt.plot(np.arange(0, 40), H.history['accuracy'], label='train_acc')
+plt.plot(np.arange(0, 40), H.history['val_accuracy'], label='validation_acc')
 plt.title('Training Loss and Accuracy')
 plt.xlabel('Epoch #')
 plt.ylabel('Loss/Accuracy')
